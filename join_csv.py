@@ -1,21 +1,25 @@
 import pandas as pd
 import os
 
-def join_csv(folder_path, join_where = 'below', common_column = 'District'):
+def join_csv(folder_path, join_where = 'below', common_column = 'District', sequential = True):
 
     '''
     This function joins all the csv files in a folder and returns a merged dataframe. 
 
     Parameters:
-    folder_path (str): Path to the folder containing csv files.
-    join_where (str): 'below' or 'side'. If 'below', the function will join the csv files below each other. If 'side', the function will join the csv files side by side.
-    common_column (str): Name of the column that is common in all the csv files. This column will be used to join the csv files. Default is 'District'.
+        folder_path (str): Path to the folder containing csv files.
+        join_where (str): 'below' or 'side'. If 'below', the function will join the csv files below each other. If 'side', the function will join the csv files side by side.
+        common_column (str): Name of the column that is common in all the csv files. This column will be used to join the csv files. Default is 'District'.
+        sequential (bool): If True, the function will sort the merged dataframe by 'Column_Name' and 'File_Name'. Default is True. Only applicable if join_where = 'below'.
 
     Returns:
-    merged_df (pandas.DataFrame): Merged dataframe of all the csv files in the folder.
+        merged_df (pandas.DataFrame): Merged dataframe of all the csv files in the folder.
 
     Example:
-    df = join_csv(r'path/to/folder/containing/csv/files', join_where = 'below', common_column = 'District')
+        # when join_where = 'side':
+        df = join_csv(r'path/to/folder/containing/csv/files', join_where = 'side', common_column = 'District')
+        # when join_where = 'below':
+        df = join_csv(r'path/to/folder/containing/csv/files', join_where = 'below', common_column = 'District', sequential = True)
 
     '''
 
@@ -50,4 +54,9 @@ def join_csv(folder_path, join_where = 'below', common_column = 'District'):
                 merged_df = pd.concat([merged_df, df], axis=0, ignore_index=True)
 
     merged_df.to_csv(os.path.join(os.path.dirname(folder_path), f'merged_{join_where}.csv'), index = False)
+    
+    if join_where == 'below' and sequential:
+        df_sorted = merged_df.sort_values(by=['Column_Name', 'File_Name'])
+        df_sorted.to_csv(os.path.join(os.path.dirname(folder_path), 'sorted.csv'), index = False)
+        
     return merged_df
