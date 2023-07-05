@@ -22,3 +22,10 @@ xi, yi, interpolated_data = idw_interpolation(input_shapefile, output_folder = o
                                         radius = 1.0, num_points = 100, cell_size = 0.001, 
                                         exclude_columns = ['ID'])
 ```
+---
+- Kriging
+```python
+# ---------------------- Example ---------------------          
+input_file = r'path\to\file.csv'
+perform_kriging(input_data = input_file, start_column = 2, use_external_drift = True, external_drift_column = 'external_drift', export_shp = True)
+```
